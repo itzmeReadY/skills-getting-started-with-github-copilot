@@ -142,3 +142,63 @@ footer {
   padding: 20px;
   color: #666;
 }
+/* Participants section on activity cards */
+.participants-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.participants-section h5 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.participants-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.participant-email {
+  overflow-wrap: anywhere;
+}
+
+.no-participants {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.unregister-button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.unregister-button:hover {
+  background: #fecaca;
+}
+
+.unregister-button:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.unregister-button:focus-visible {
+  outline: 2px solid #b91c1c;
+  outline-offset: 2px;
+}
