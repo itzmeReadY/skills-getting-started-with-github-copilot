@@ -1,11 +1,6 @@
-"""
-High School Management System API
 
-A simple FastAPI application that allows students to view, sign up for,
-and unregister from extracurricular activities at Mergington High School.
-"""
+"""High School Management System API."""
 
-import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -14,19 +9,17 @@ from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
     title="Mergington High School API",
-    description="API for viewing and signing up for extracurricular activities",
+    description="Extracurricular activities",
 )
-
-# Mount static files
-current_dir = Path(__file__).parent
 
 app.mount(
     "/static",
-    StaticFiles(directory=os.path.join(current_dir, "static")),
+    StaticFiles(
+        directory=Path(__file__).resolve().parent / "static"
+    ),
     name="static",
 )
 
-# In-memory activity database
 activities = {
     "Chess Club": {
         "description": "Learn strategies and compete in chess tournaments",
@@ -96,20 +89,16 @@ activities = {
 
 @app.get("/")
 def root():
-    """Redirect to the website."""
     return RedirectResponse(url="/static/index.html")
 
 
 @app.get("/activities")
 def get_activities():
-    """Return all activities and their participants."""
     return activities
 
 
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
-    """Register a student for an activity."""
-
     if activity_name not in activities:
         raise HTTPException(
             status_code=404,
@@ -117,15 +106,20 @@ def signup_for_activity(activity_name: str, email: str):
         )
 
     activity = activities[activity_name]
+    email = email.strip().lower()
 
-    # Prevent duplicate registrations
+    if not email or "@" not in email:
+        raise HTTPException(
+            status_code=422,
+            detail="Valid student email required",
+        )
+
     if email in activity["participants"]:
         raise HTTPException(
             status_code=400,
             detail="Student is already signed up for this activity",
         )
 
-    # Prevent registration when the activity is full
     if len(activity["participants"]) >= activity["max_participants"]:
         raise HTTPException(
             status_code=400,
@@ -142,8 +136,6 @@ def signup_for_activity(activity_name: str, email: str):
 
 @app.delete("/activities/{activity_name}/signup")
 def unregister_from_activity(activity_name: str, email: str):
-    """Unregister a student from an activity."""
-
     if activity_name not in activities:
         raise HTTPException(
             status_code=404,
@@ -151,6 +143,7 @@ def unregister_from_activity(activity_name: str, email: str):
         )
 
     activity = activities[activity_name]
+    email = email.strip().lower()
 
     if email not in activity["participants"]:
         raise HTTPException(
